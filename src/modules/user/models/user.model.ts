@@ -6,6 +6,6 @@ export class User extends Document {
     active?: boolean
     email: string
     name: string
-    password: string
-    roles: EUserRole
+    password?: string
+    roles?: EUserRole
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateUserDto } from './dto';
 import { User } from './models';
 
@@ -16,5 +16,14 @@ export class UserService {
 
     async findByEmail(email: string): Promise<User> {
         return await this.model.findOne({ email }).exec()
+    }
+
+    async findById(id: string): Promise<User> {
+        return await this.model.findOne({ _id: Types.ObjectId(id), active: true },
+          'id email name roles').exec()
+    }
+
+    async delete(id: string): Promise<any> {
+        return await this.model.deleteOne({ _id: id}).exec()
     }
 }
