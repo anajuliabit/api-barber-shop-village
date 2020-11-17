@@ -7,5 +7,5 @@ export class User extends Document {
     email: string
     name: string
     password?: string
-    roles?: EUserRole
+    roles?: EUserRole[]
 }

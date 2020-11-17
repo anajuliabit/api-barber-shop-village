@@ -5,5 +5,5 @@ export class CreateUserDto {
     readonly email: string
     readonly password: string
     readonly passwordConfirmation: string
-    readonly role: EUserRole
+    readonly role: EUserRole[]
   }

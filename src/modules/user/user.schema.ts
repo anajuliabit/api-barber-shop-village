@@ -9,5 +9,5 @@ export const UserSchema = new mongoose.Schema({
   email: { type: String, trim: true, lowercase: true, unique: true, required: true },
   name: { type: String, trim: true, lowercase: true, required: true },
   password: { type: String, trim: true, required: true },
-  roles: { type: String, enum: rolesOptions, default: EUserRole.client }
+  roles: { type: [String], enum: rolesOptions, default: EUserRole.client }
 }, { timestamps: true, collection: 'users' })

@@ -2,9 +2,12 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt'
 import { CreateUserDto } from '../user/dto';
+import { EUserRole } from '../user/enums';
 import { User } from '../user/models';
 
 import { UserService } from '../user/user.service';
+import { LoginUserDto } from './dtos/login-user.dto';
+import { JwtPayload } from './interfaces';
 
 @Injectable()
 export class AuthService {
@@ -26,5 +29,28 @@ export class AuthService {
         delete createUser.password
         if (!createUser._id) throw new HttpException('Não foi possível completar o cadastro. Tente novamente.', HttpStatus.INTERNAL_SERVER_ERROR)
         return createUser
+      }
+
+      async signinUser(data: LoginUserDto): Promise<string> {
+        const user = await this.userService.findByEmail(data.username)
+        if (!user) throw new HttpException('Email ou senha incorretos. Por favor tente novamente!', HttpStatus.UNAUTHORIZED)
+    
+        if (data.client === EUserRole.admin) {
+          const isAdmin = user.roles.includes(EUserRole.admin)
+          if (!isAdmin) throw new HttpException('Você não deveria estar aqui!', HttpStatus.FORBIDDEN)
+        }
+
+        if (data.client === EUserRole.barber) {
+            const isBarber = user.roles.includes(EUserRole.barber)
+            if (!isBarber) throw new HttpException('Você não deveria estar aqui!', HttpStatus.FORBIDDEN)
+          }
+    
+        const validatePassword = await bcrypt.compare(data.password, user.password || '')
+        if (!validatePassword) throw new HttpException('Email ou senha incorretos. Por favor tente novamente!', HttpStatus.UNAUTHORIZED)
+    
+        const payload: JwtPayload = { id: user._id, permissions: user.roles }
+        const accessToken =  this.jwtService.sign(payload, { expiresIn: "24h" })
+    
+        return accessToken
       }
 }
