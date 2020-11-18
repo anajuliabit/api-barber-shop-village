@@ -6,6 +6,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ScheduleModule } from './modules/schedule/schedule.module';
+import { ClientModule } from './modules/client/client.module';
+import { BarberModule } from './modules/barber/barber.module';
 
 
 @Module({
@@ -14,7 +16,9 @@ import { ScheduleModule } from './modules/schedule/schedule.module';
         MongooseModule.forRoot(process.env.MONGODB),
         UserModule,
         AuthModule,
-        ScheduleModule],  
+        ScheduleModule,
+        ClientModule,
+        BarberModule],  
     controllers: [AppController],
     providers: [AppService],
 })
