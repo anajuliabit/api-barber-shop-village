@@ -3,10 +3,10 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
+// import { ClientModule } from './modules/client/client.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ScheduleModule } from './modules/schedule/schedule.module';
-import { ClientModule } from './modules/client/client.module';
 import { BarberModule } from './modules/barber/barber.module';
 
 
@@ -14,11 +14,11 @@ import { BarberModule } from './modules/barber/barber.module';
     imports: [
         ConfigModule.forRoot(),
         MongooseModule.forRoot(process.env.MONGODB),
-        UserModule,
         AuthModule,
+        UserModule,
         ScheduleModule,
-        ClientModule,
-        BarberModule],  
+        BarberModule
+        ],
     controllers: [AppController],
     providers: [AppService],
 })

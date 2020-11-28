@@ -1,6 +1,7 @@
+
 import * as mongoose from 'mongoose'
 
-import { EUserRole } from './enums'
+import { EUserRole } from './enums/user-role.enum'
 
 const rolesOptions: string[] = Object.keys(EUserRole).map(key => EUserRole[key])
 

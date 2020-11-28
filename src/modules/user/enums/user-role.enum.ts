@@ -1,5 +1,5 @@
 export enum EUserRole {
-    admin = 'ADMIN',
-    barber = 'BARBER',
-    client = 'CLIENT',
-  }
+  ADMIN = 'ADMIN',
+  BARBER = 'BARBER',
+  CLIENT = 'CLIENT',
+}
