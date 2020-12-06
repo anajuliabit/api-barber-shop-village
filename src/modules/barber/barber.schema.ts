@@ -12,4 +12,4 @@ export const BarberSchema = new mongoose.Schema({
       hours: [{ type: Date, required: true }]
   }],
   description: { type: String }
-}, { timestamps: true, collection: 'barber' })
+}, { timestamps: true, collection: 'barbers' })
