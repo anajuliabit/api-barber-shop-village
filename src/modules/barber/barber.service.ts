@@ -18,9 +18,13 @@ export class BarberService {
             const createUserDto: CreateUserDto = {
                 name, email, password, passwordConfirmation, role: [EUserRole.BARBER]
             }
-            const { cutPrice, haircutType, workTime } = data
+            const { cutPrice, haircutType, workTime, description } = data
             const user = await this.authService.registerUser(createUserDto)
-            const barber = new this.model({ userId: user.id, cutPrice,  haircutType, workTime  })
+            const barber = new this.model({ userId: user.id, cutPrice,  haircutType, workTime, description  })
             return await barber.save()
+        }
+
+        async findAll(): Promise<Barber[]> {        
+            return await this.model.find();
         }
 }

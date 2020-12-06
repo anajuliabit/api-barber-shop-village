@@ -12,10 +12,12 @@ import { BarberModule } from './modules/barber/barber.module';
 @Module({
     imports: [
         ConfigModule.forRoot(),
-        MongooseModule.forRoot(process.env.MONGODB),
+        MongooseModule.forRoot(process.env.MONGODB, {
+            useCreateIndex: true
+        }),
         UserModule,
         AuthModule,
-        //Comentado temporariamente pq ta dando erro: BarberModule,
+        BarberModule,
         ScheduleModule
         ],
     controllers: [AppController],

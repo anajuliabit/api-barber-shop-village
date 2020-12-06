@@ -9,4 +9,5 @@ export class CreateBarberDto {
     cutPrice: number
     haircutType: EHaircutType[]
     workTime: WorkTime[]
+    description: string
   }

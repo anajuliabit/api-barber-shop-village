@@ -1,8 +1,8 @@
 export enum EHaircutType {
-    STRAIGHT,
-    CURLY,
-    WAVY,
-    CRISP
+    STRAIGHT = 'STRAIGHT',
+    CURLY = 'CURLY',
+    WAVY = 'WAVY',
+    CRISP = 'CRISP'
 }
 
 export const haircutTypeList: string[] = Object.keys(EHaircutType).map(key => EHaircutType[key])
