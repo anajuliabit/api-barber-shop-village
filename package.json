@@ -28,6 +28,7 @@
     "@nestjs/mongoose": "^7.0.2",
     "@nestjs/passport": "^7.1.0",
     "@nestjs/platform-express": "^7.0.0",
+    "aws-sdk": "^2.804.0",
     "bcrypt": "^5.0.0",
     "class-validator": "^0.12.2",
     "mongoose": "^5.10.12",

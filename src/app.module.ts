@@ -9,15 +9,14 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ScheduleModule } from './modules/schedule/schedule.module';
 import { BarberModule } from './modules/barber/barber.module';
 
-
 @Module({
     imports: [
         ConfigModule.forRoot(),
         MongooseModule.forRoot(process.env.MONGODB),
-        AuthModule,
         UserModule,
-        ScheduleModule,
-        BarberModule
+        AuthModule,
+        //Comentado temporariamente pq ta dando erro: BarberModule,
+        ScheduleModule
         ],
     controllers: [AppController],
     providers: [AppService],

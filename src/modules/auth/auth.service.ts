@@ -32,16 +32,17 @@ export class AuthService {
   }
 
   async signinUser(data: LoginUserDto): Promise<string> {
-    const user = await this.userService.findByEmail(data.username)
+    const user = await this.userService.findByEmail(data.email)
+
     if (!user) throw new HttpException('Email ou senha incorretos. Por favor tente novamente!', HttpStatus.UNAUTHORIZED)
 
-    if (data.client === EUserRole.admin) {
-      const isAdmin = user.roles.includes(EUserRole.admin)
+    if (data.client === EUserRole.ADMIN) {
+      const isAdmin = user.roles.includes(EUserRole.ADMIN)
       if (!isAdmin) throw new HttpException('Você não deveria estar aqui!', HttpStatus.FORBIDDEN)
     }
 
-    if (data.client === EUserRole.barber) {
-      const isBarber = user.roles.includes(EUserRole.barber)
+    if (data.client === EUserRole.BARBER) {
+      const isBarber = user.roles.includes(EUserRole.BARBER)
       if (!isBarber) throw new HttpException('Você não deveria estar aqui!', HttpStatus.FORBIDDEN)
     }
 
@@ -49,7 +50,7 @@ export class AuthService {
     if (!validatePassword) throw new HttpException('Email ou senha incorretos. Por favor tente novamente!', HttpStatus.UNAUTHORIZED)
 
     const payload: JwtPayload = { id: user._id, permissions: user.roles }
-    const accessToken =  this.jwtService.sign(payload, { expiresIn: "24h" })
+    const accessToken =  this.jwtService.sign(payload)
 
     return accessToken
   }

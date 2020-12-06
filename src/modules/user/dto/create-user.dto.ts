@@ -8,4 +8,5 @@ export class CreateUserDto {
   readonly passwordConfirmation: string
   @IsEnum(EUserRole)
   readonly role: EUserRole[]
+  readonly image?: string
 }

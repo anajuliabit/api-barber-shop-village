@@ -16,11 +16,11 @@ export class BarberService {
         async create(data: CreateBarberDto): Promise<Barber> {
             const { name, email, password, passwordConfirmation } = data
             const createUserDto: CreateUserDto = {
-                name, email, password, passwordConfirmation, role: [EUserRole.barber]
+                name, email, password, passwordConfirmation, role: [EUserRole.BARBER]
             }
             const { cutPrice, haircutType, workTime } = data
             const user = await this.authService.registerUser(createUserDto)
-            const barber = new this.model({ userId: user.id, cutPrice, haircutType, workTime  })
+            const barber = new this.model({ userId: user.id, cutPrice,  haircutType, workTime  })
             return await barber.save()
         }
 }

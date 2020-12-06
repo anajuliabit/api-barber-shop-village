@@ -6,7 +6,7 @@ export class LoginUserDto {
   @IsString()
   @MinLength(5)
   @MaxLength(100)
-  readonly username: string
+  readonly email: string
 
   @IsNotEmpty()
   @IsString()
