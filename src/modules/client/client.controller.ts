@@ -15,7 +15,7 @@ export class ClientController {
 
     @Post('register')
     @UseInterceptors(FileInterceptor('image'))
-    async registerUser(@UploadedFile() file, @Body() createClientDto: CreateClientDto): Promise<any> {
+    async registerUser(@UploadedFile() file: Record<string, unknown>, @Body() createClientDto: CreateClientDto): Promise<any> {
         const createUserDto : CreateUserDto = { ...createClientDto, role: [EUserRole.CLIENT]}
         return await this.authService.registerUser({ "file": file, "data": createUserDto})
     }

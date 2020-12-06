@@ -9,11 +9,11 @@ const s3 = new S3({
 
 @Injectable()
 export class AwsService {
-    constructor() { }
 
-    async upload(email, file): Promise<String> {
-        let fileExt = file.mimetype.replace("image/", "");
-        let filePath = `${email}/profilePicture.${fileExt}`;
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    async upload(email: string, file: any): Promise<string> {
+        const fileExt = file.mimetype.replace("image/", "");
+        const filePath = `${email}/profilePicture.${fileExt}`;
 
         return await new Promise(function(resolve, reject) {
             s3.putObject(
@@ -23,7 +23,7 @@ export class AwsService {
                     Body: file.buffer,
                     ACL: "public-read"
                 },
-                function (err, data) {
+                function (err) {
                     if (err) {
                         reject(err);
                     }

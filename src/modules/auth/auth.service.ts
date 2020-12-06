@@ -11,6 +11,7 @@ import { LoginUserDto } from './dtos/login-user.dto';
 import { IAuth } from './interfaces/auth.interface';
 import { JwtPayload } from './interfaces/payload.interface';
 import { AwsService } from '../shared/aws/aws.service'
+import { RegisterUserDto } from './dtos/register-user-dto';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,7 @@ export class AuthService {
 
   private readonly saltRounds = parseInt(process.env.BCRYPT_ROUNDS)
 
-  async registerUser(dataObj): Promise<User> {
+  async registerUser(dataObj: RegisterUserDto): Promise<User> {
     const { file } = dataObj;
     const { data } = dataObj;
     if (data.password !== data.passwordConfirmation)
@@ -30,7 +31,7 @@ export class AuthService {
     const user = await this.userService.findByEmail(data.email)
     if (user) throw new HttpException('Email ou telefone já cadastrado.', HttpStatus.BAD_REQUEST)
 
-    const profilePictureName : String = await this.awsService.upload(data.email, file)
+    const profilePictureName: string = await this.awsService.upload(data.email, file)
     const userPassword = bcrypt.hashSync(data.password, this.saltRounds)
     const createUser = await this.userService.create({ ...data, password: userPassword, profilePicture: profilePictureName })
     delete createUser.password
