@@ -13,13 +13,14 @@ export class BarberService {
         @InjectModel('Barber') private readonly model: Model<Barber>,
         private readonly authService: AuthService ) { }
 
-        async create(data: CreateBarberDto): Promise<Barber> {
+        async create(file: Record<string, unknown>, data: CreateBarberDto): Promise<Barber> {
+            console.log(data)
             const { name, email, password, passwordConfirmation } = data
             const createUserDto: CreateUserDto = {
                 name, email, password, passwordConfirmation, role: [EUserRole.BARBER]
             }
             const { cutPrice, haircutType, workTime, description } = data
-            const user = await this.authService.registerUser(createUserDto)
+            const user = await this.authService.registerUser({file, data: createUserDto})
             const barber = new this.model({ userId: user.id, cutPrice,  haircutType, workTime, description  })
             return await barber.save()
         }

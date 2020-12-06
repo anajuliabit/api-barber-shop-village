@@ -9,5 +9,5 @@ export class CreateUserDto {
   @IsEnum(EUserRole)
   readonly role: EUserRole[]
   @IsNotEmptyObject()
-  readonly image?: object
+  readonly image?: Record<string, unknown>
 }

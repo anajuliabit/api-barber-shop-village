@@ -12,9 +12,9 @@ export class ClientController {
         private readonly authService: AuthService,
     ) { }
 
-    @Post('register')
-    async registerUser(@Body() createClientDto: CreateClientDto): Promise<User> {
-      const createUserDto: CreateUserDto = { ...createClientDto, role: [EUserRole.CLIENT]}
-      return await this.authService.registerUser(createUserDto)
-    }
+    // @Post('register')
+    // async registerUser(@Body() createClientDto: CreateClientDto): Promise<User> {
+    //   const createUserDto: CreateUserDto = { ...createClientDto, role: [EUserRole.CLIENT]}
+    //   return await this.authService.registerUser(createUserDto)
+    // }
 }
