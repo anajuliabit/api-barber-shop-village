@@ -8,4 +8,5 @@ export class User extends Document {
   name: string
   password?: string
   roles?: EUserRole[]
+  profileImage: string
 }

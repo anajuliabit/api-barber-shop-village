@@ -1,4 +1,5 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Res, Get, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Res, Get, UseGuards, Request, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express'
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthService } from './auth.service';
@@ -16,6 +17,12 @@ export class AuthController {
       private readonly authService: AuthService,
       private readonly awsService: AwsService
   ) { }
+
+  @Post('register')
+  @UseInterceptors(FileInterceptor('image'))
+  async registerUser(@UploadedFile() file, @Body() createUserDto: CreateUserDto): Promise<any> {
+    return await this.authService.registerUser({ "file": file, "data": createUserDto})
+  }
 
   @Post('login')
   @HttpCode(HttpStatus.NO_CONTENT)

@@ -1,5 +1,5 @@
 import { EUserRole } from "../enums/user-role.enum"
-import { IsEnum } from "class-validator"
+import { IsNotEmptyObject, IsEnum } from "class-validator"
 
 export class CreateUserDto {
   readonly name: string
@@ -8,5 +8,6 @@ export class CreateUserDto {
   readonly passwordConfirmation: string
   @IsEnum(EUserRole)
   readonly role: EUserRole[]
-  readonly image?: string
+  @IsNotEmptyObject()
+  readonly image?: object
 }
