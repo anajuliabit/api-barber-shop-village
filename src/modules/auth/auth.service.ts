@@ -29,8 +29,11 @@ export class AuthService {
 
     const user = await this.userService.findByEmail(data.email)
     if (user) throw new HttpException('Email ou telefone já cadastrado.', HttpStatus.BAD_REQUEST)
-
-    const profilePictureName : String = await this.awsService.upload(data.email, file)
+    let profilePictureName : String = "";
+    
+    if(file) {
+      profilePictureName = await this.awsService.upload(data.email, file)
+    }
     const userPassword = bcrypt.hashSync(data.password, this.saltRounds)
     const createUser = await this.userService.create({ ...data, password: userPassword, profilePicture: profilePictureName })
     delete createUser.password
