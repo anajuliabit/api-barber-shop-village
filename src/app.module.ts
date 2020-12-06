@@ -8,6 +8,7 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ScheduleModule } from './modules/schedule/schedule.module';
 import { BarberModule } from './modules/barber/barber.module';
+import { ClientModule } from './modules/client/client.module';
 
 @Module({
     imports: [
@@ -18,7 +19,8 @@ import { BarberModule } from './modules/barber/barber.module';
         UserModule,
         AuthModule,
         BarberModule,
-        ScheduleModule
+        ScheduleModule,
+        ClientModule
         ],
     controllers: [AppController],
     providers: [AppService],

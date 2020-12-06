@@ -7,6 +7,7 @@ import { GetUser } from './decorators/get-user.decorator'
 import { IUser } from '../user/interfaces/user.interface'
 import { AuthGuard} from '@nestjs/passport';
 import { AwsService } from '../shared/aws/aws.service'
+import { IAuth } from './interfaces/auth.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -16,18 +17,10 @@ export class AuthController {
       private readonly awsService: AwsService
   ) { }
 
-  @Post('register')
-  async registerUser(@Body() createUserDto: CreateUserDto): Promise<any> {
-    return await this.authService.registerUser(createUserDto)
-  }
-
   @Post('login')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async loginUser(@Body() loginUserDto: LoginUserDto, @Res() res: Response): Promise<any> {
-    const accessToken = await this.authService.signinUser(loginUserDto)
-    res.header('Authorization', `${accessToken}`)
-    res.end()
-    return { data: null }
+  async loginUser(@Body() loginUserDto: LoginUserDto): Promise<IAuth> {
+    return await this.authService.signinUser(loginUserDto)
   }
 
   @Get('me')

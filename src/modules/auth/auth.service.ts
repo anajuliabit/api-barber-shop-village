@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { AuthInfo } from 'aws-sdk/clients/iot';
 import * as bcrypt from 'bcrypt'
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { EUserRole } from '../user/enums/user-role.enum';
@@ -7,6 +8,7 @@ import { User } from '../user/models/user.model';
 
 import { UserService } from '../user/user.service';
 import { LoginUserDto } from './dtos/login-user.dto';
+import { IAuth } from './interfaces/auth.interface';
 import { JwtPayload } from './interfaces/payload.interface';
 
 @Injectable()
@@ -31,7 +33,7 @@ export class AuthService {
     return createUser
   }
 
-  async signinUser(data: LoginUserDto): Promise<string> {
+  async signinUser(data: LoginUserDto): Promise<IAuth> {
     const user = await this.userService.findByEmail(data.email)
 
     if (!user) throw new HttpException('Email ou senha incorretos. Por favor tente novamente!', HttpStatus.UNAUTHORIZED)
@@ -52,6 +54,6 @@ export class AuthService {
     const payload: JwtPayload = { id: user._id, permissions: user.roles }
     const accessToken =  this.jwtService.sign(payload)
 
-    return accessToken
+    return { accessToken, payload }
   }
 }
