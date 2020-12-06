@@ -27,13 +27,16 @@ export class AwsService {
                     if (err) {
                         reject(err);
                     }
-                    console.log("Succesfully saved profile picture on S3.")
                     resolve(filePath);
                 }
             )
         }).then(
-            (val) => { return val },
-            (err) => { return null }
+            (val) => {
+                console.log("Succesfully saved profile picture on S3.")
+                return val },
+            (err) => {
+                console.log("Error saving to S3.")
+                return null }
         ).catch((err) => console.log(err));
     }
 }
