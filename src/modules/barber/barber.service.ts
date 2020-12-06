@@ -17,7 +17,7 @@ export class BarberService {
         async create(file: Record<string, unknown>, data: CreateBarberDto): Promise<Barber> {
             const { name, email, password, passwordConfirmation } = data
             const createUserDto: CreateUserDto = {
-                name, email, password, passwordConfirmation, role: [EUserRole.BARBER]
+                name, email, password, passwordConfirmation, roles: [EUserRole.BARBER]
             }
             const { cutPrice, haircutType, workTime, description } = data
             const user = await this.authService.registerUser({file, data: createUserDto})
@@ -33,4 +33,8 @@ export class BarberService {
         async findAll(): Promise<Barber[]> {        
             return await this.model.find();
         }
+
+        async findById(id: string): Promise<Barber> {        
+            return await this.model.findOne({ _id: id }); 
+    }
 }
