@@ -11,28 +11,29 @@ const s3 = new S3({
 export class AwsService {
     constructor() { }
 
-    async upload(email, file) {
+    async upload(email, file): Promise<String> {
         let fileExt = file.mimetype.replace("image/", "");
-        let fileName = await s3.putObject(
-            {
-                Key: `${email}/profilePicture.${fileExt}`,
-                Bucket: "barberiaproject",
-                Body: file.buffer,
-                ACL: "public-read"
-            },
-            function (err, data) {
-                if(err) {
-                    console.log(err)
-                    return null
+        let filePath = `${email}/profilePicture.${fileExt}`;
+
+        return await new Promise(function(resolve, reject) {
+            s3.putObject(
+                {
+                    Key: filePath,
+                    Bucket: "barberiaproject",
+                    Body: file.buffer,
+                    ACL: "public-read"
+                },
+                function (err, data) {
+                    if (err) {
+                        reject(err);
+                    }
+                    console.log("Succesfully saved profile picture on S3.")
+                    resolve(filePath);
                 }
-                return `${email}/profilePicture.${fileExt}`
-            }
-        )
-
-        return fileName;
-    }
-
-    getS3() {
-        return
+            )
+        }).then(
+            (val) => { return val },
+            (err) => { return null }
+        ).catch((err) => console.log(err));
     }
 }

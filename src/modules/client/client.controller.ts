@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseInterceptors, UploadedFile} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthService } from '../auth/auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { EUserRole } from '../user/enums/user-role.enum';
@@ -12,9 +13,10 @@ export class ClientController {
         private readonly authService: AuthService,
     ) { }
 
-    // @Post('register')
-    // async registerUser(@Body() createClientDto: CreateClientDto): Promise<User> {
-    //   const createUserDto: CreateUserDto = { ...createClientDto, role: [EUserRole.CLIENT]}
-    //   return await this.authService.registerUser(createUserDto)
-    // }
+    @Post('register')
+    @UseInterceptors(FileInterceptor('image'))
+    async registerUser(@UploadedFile() file, @Body() createClientDto: CreateClientDto): Promise<any> {
+        const createUserDto : CreateUserDto = { ...createClientDto, role: [EUserRole.CLIENT]}
+        return await this.authService.registerUser({ "file": file, "data": createUserDto})
+    }
 }
