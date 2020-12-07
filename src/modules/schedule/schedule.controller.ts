@@ -1,6 +1,10 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Put, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard} from '@nestjs/passport';
+import { UserRoleInterceptor } from '../auth/interceptors/user-role.interceptor';
+import { EUserRole } from '../user/enums/user-role.enum';
 import { CreateScheduleDto } from './dtos/create-schedule.dto';
+import { EScheduleStatus } from './enums/schedule-status.enum';
+import { Schedule } from './models/schedule.model';
 import { ScheduleService } from './schedule.service';
 
 @Controller('schedule')
@@ -10,7 +14,14 @@ export class ScheduleController {
 
   @Post('create')
   @UseGuards(AuthGuard())
-  async registerSchedule(@Body() createScheduleDto: CreateScheduleDto): Promise<any> {
+  @UseInterceptors(new UserRoleInterceptor([EUserRole.CLIENT]))
+  async createSchedule(@Body() createScheduleDto: CreateScheduleDto): Promise<Schedule> {
+    return await this.scheduleService.create(createScheduleDto);
+  }
 
+  @Put('change-status')
+  @UseGuards(AuthGuard())
+  async changeStatus(@Query('id') id: string, @Query('status') status: EScheduleStatus): Promise<Schedule> {
+    return await this.scheduleService.changeStatus(id, status);
   }
 }

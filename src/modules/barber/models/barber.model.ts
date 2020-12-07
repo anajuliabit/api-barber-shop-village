@@ -12,5 +12,5 @@ export class Barber extends Document {
     cutPrice: number
     userId: string
     haircutType?: EHaircutType[]
-    workTime: WorkTime
+    workTime: WorkTime[]
 }

@@ -14,5 +14,6 @@ import { UserModule } from '../user/user.module';
     ],
     providers: [BarberService],
     controllers: [BarberController],
+    exports: [BarberService]
 })
 export class BarberModule {}

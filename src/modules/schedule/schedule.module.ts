@@ -4,13 +4,17 @@ import { ScheduleService } from './schedule.service';
 import { ScheduleSchema } from './schedule.schema'
 import { ScheduleController } from './schedule.controller';
 import { PassportModule } from '@nestjs/passport';
+import { BarberModule } from '../barber/barber.module';
+import { UserModule } from '../user/user.module';
 
 const passportModule = PassportModule.register({ defaultStrategy: 'jwt' });
 
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: 'Schedule', schema: ScheduleSchema }]),
-        passportModule
+        passportModule,
+        BarberModule,
+        UserModule
     ],
     providers: [ScheduleService],
     exports: [ScheduleService],

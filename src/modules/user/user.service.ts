@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
+import { EUserRole } from './enums/user-role.enum';
 import { User } from './models/user.model';
 
 @Injectable()
@@ -20,6 +21,11 @@ export class UserService {
 
   async findById(id: string): Promise<User> {
     return await this.model.findOne({ _id: Types.ObjectId(id), active: true },
+      'id email name roles').exec()
+  }
+
+  async findByIdAndRole(id: string, role: EUserRole): Promise<User> {
+    return await this.model.findOne({ _id: Types.ObjectId(id), active: true, roles: [role]  },
       'id email name roles').exec()
   }
 

@@ -1,4 +1,5 @@
 import { Document } from "mongoose";
+import { EScheduleStatus } from "../enums/schedule-status.enum";
 
 export class Schedule extends Document {
     id?: string
@@ -6,5 +7,5 @@ export class Schedule extends Document {
     date: Date
     clientId: string
     barberId: string
-    finished: boolean 
+    status: EScheduleStatus 
 }
