@@ -14,7 +14,8 @@ import { ClientModule } from './modules/client/client.module';
     imports: [
         ConfigModule.forRoot(),
         MongooseModule.forRoot(process.env.MONGODB, {
-            useCreateIndex: true
+            useCreateIndex: true,
+            useFindAndModify: false
         }),
         UserModule,
         AuthModule,

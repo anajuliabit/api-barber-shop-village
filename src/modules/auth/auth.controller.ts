@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Get, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dtos/login-user.dto';
-import { GetUser } from './decorators/get-user.decorator'
+import { GetUser } from '../shared/decorators/get-user.decorator'
 import { IUser } from '../user/interfaces/user.interface'
 import { AuthGuard} from '@nestjs/passport';
 import { AwsService } from '../shared/aws/aws.service'

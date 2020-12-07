@@ -11,5 +11,9 @@ export const BarberSchema = new mongoose.Schema({
       day: { type: Date, required: true },
       hours: [{ type: Date, required: true }]
   }],
-  description: { type: String }
+  description: { type: String },
+  portfolio: {
+      type: Array,
+      required: false
+  }
 }, { timestamps: true, collection: 'barbers' })
