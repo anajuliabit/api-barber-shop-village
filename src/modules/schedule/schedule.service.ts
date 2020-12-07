@@ -24,7 +24,8 @@ export class ScheduleService {
         if(!client) throw new HttpException('Cliente não encontrado', HttpStatus.NOT_FOUND) 
         const day = barber.workTime?.find(wt => (wt.day.toISOString().split('T')[0] === new Date(data.date).toISOString().split('T')[0]))
         if(!day.hours?.map(hour => hour.toISOString()).includes(new Date(data.date).toISOString())) throw new HttpException('Horário não disponível para este barbeiro.', HttpStatus.BAD_REQUEST)
-        if(!await this.scheduleIsAvailable(data.barberId, data.date)) throw new HttpException('Barbeiro já possui um agendamento neste horario.', HttpStatus.BAD_REQUEST)
+        const scheduleExists = await this.scheduleExists(data.barberId, data.date)
+        if(scheduleExists.length > 0) throw new HttpException('Barbeiro já possui um agendamento neste horario.', HttpStatus.BAD_REQUEST)
         const schedule = new this.model({...data, status: EScheduleStatus.PENDING})
         return await schedule.save()  
     }
@@ -36,8 +37,7 @@ export class ScheduleService {
         return await schedule.save()
     }
 
-    private async scheduleIsAvailable(barberId: string, date: Date): Promise<boolean> {
-        const schedule = await this.model.find({ barberId, date, status: { $in: [EScheduleStatus.PENDING, EScheduleStatus.SCHEDULED] }})
-        return !schedule;
+    private async scheduleExists(barberId: string, date: Date): Promise<Schedule[]> {
+        return await this.model.find({ barberId, date, status: { $in: [EScheduleStatus.PENDING, EScheduleStatus.SCHEDULED] }})
     }
 }
