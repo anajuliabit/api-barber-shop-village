@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { BarberService } from '../barber/barber.service';
 import { EUserRole } from '../user/enums/user-role.enum';
 import { UserService } from '../user/user.service';
@@ -30,11 +30,19 @@ export class ScheduleService {
         return await schedule.save()  
     }
 
-    async changeStatus(_id: string, status: EScheduleStatus): Promise<Schedule> {
-        const schedule = await this.model.findOne({ _id })
+    async changeStatus(id: string, status: EScheduleStatus): Promise<Schedule> {
+        const schedule = await this.model.findOne({ _id: Types.ObjectId(id) })
         if(!schedule) throw new HttpException('Agendamento inexistente', HttpStatus.NOT_FOUND)
         schedule.status = status
         return await schedule.save()
+    }
+    
+    async findSchedulesByBarber(barberId: string): Promise<Schedule[]> {
+        return await this.model.find({ barberId })
+    }
+
+    async findSchedulesByClient(clientId: string): Promise<Schedule[]> {
+        return await this.model.find({ clientId })
     }
 
     private async scheduleExists(barberId: string, date: Date): Promise<Schedule[]> {
