@@ -7,5 +7,6 @@ export class Schedule extends Document {
     date: Date
     clientId: string
     barberId: string
-    status: EScheduleStatus 
+    status: EScheduleStatus
+    feedback?: object
 }

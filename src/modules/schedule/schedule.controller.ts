@@ -6,6 +6,9 @@ import { CreateScheduleDto } from './dtos/create-schedule.dto';
 import { EScheduleStatus } from './enums/schedule-status.enum';
 import { Schedule } from './models/schedule.model';
 import { ScheduleService } from './schedule.service';
+import { FeedbackDto } from './dtos/feedback.dto';
+import { GetUser } from '../shared/decorators/get-user.decorator'
+import { User } from '../user/models/user.model';
 
 @Controller('schedule')
 @UseGuards(AuthGuard())
@@ -34,5 +37,11 @@ export class ScheduleController {
   @UseInterceptors(new UserRoleInterceptor([EUserRole.CLIENT, EUserRole.ADMIN]))
   async findSchedulesByClient(@Param('id') id: string): Promise<Schedule[]> {
     return await this.scheduleService.findSchedulesByClient(id);
+  }
+
+  @Post('/feedback')
+  @UseGuards(AuthGuard('jwt'))
+  async saveFeedback(@Body() data: FeedbackDto, @GetUser() user: User) {
+      return await this.scheduleService.saveFeedback(data, user)
   }
 }
