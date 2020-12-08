@@ -37,7 +37,7 @@ export class ScheduleService {
         const barber = await this.barberService.findById(barberId)
         if(!barber) throw new HttpException('Barbeiro não encontrado', HttpStatus.NOT_FOUND)
         const { workTime } = barber
-        const schedules: Schedule[] = await this.model.find({ barberId })
+        const schedules: Schedule[] = await this.model.find({ barberId, status: { $in: [EScheduleStatus.PENDING, EScheduleStatus.SCHEDULED] }})
         if(schedules && schedules.length > 0) {
             for (const schedule of schedules) {
                 let day = workTime.find(wt => (wt.day.toISOString().split('T')[0] === new Date(schedule.date).toISOString().split('T')[0]))
