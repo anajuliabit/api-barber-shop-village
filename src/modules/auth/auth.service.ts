@@ -12,6 +12,7 @@ import { AwsService } from '../shared/aws/aws.service'
 import { RegisterUserDto } from './dtos/register-user-dto';
 import { BarberService } from '../barber/barber.service';
 import { BarberModel } from '../barber/models/barber.model';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -44,6 +45,14 @@ export class AuthService {
     return createUser
   }
 
+  async editUser(userId: string, data: CreateUserDto): Promise<User> {
+    if(data.password) {
+        data.password = await this.verifyPassword(data.password, data.passwordConfirmation)
+        delete data.passwordConfirmation
+    }
+    return await this.userService.edit(userId, data)
+  }
+
   async signinUser(data: LoginUserDto): Promise<IAuth> {
     const user = await this.userService.findByEmail(data.email)
 
@@ -73,5 +82,12 @@ export class AuthService {
           return await this.barberService.findByUserId(user._id)
       }
       return user;
+  }
+
+  private async verifyPassword(password: string, passwordConfirmation: string): Promise<string> {
+    if (password !== passwordConfirmation) {
+        throw new HttpException('As senhas precisam ser iguais.', HttpStatus.BAD_REQUEST)
+    }
+    return bcrypt.hashSync(password, this.saltRounds)
   }
 }

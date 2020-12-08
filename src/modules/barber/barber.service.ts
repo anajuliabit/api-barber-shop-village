@@ -39,13 +39,16 @@ export class BarberService {
     }
 
     async edit(userId: string, data: CreateBarberDto): Promise<Barber> {
+        if(data.email || data.name || data.password ) {
+            await this.authService.editUser(userId, data)
+        }
         const barber = await this.model.findOne({ userId }).exec();
         if(!barber) throw new HttpException('Barbeiro não encontrado', HttpStatus.NOT_FOUND)
         try {
             await barber.updateOne(data).exec()
-            return await this.model.findOne({ userId }).exec();
+            return await this.findByUserId(userId);
             } catch (err) {
-            throw new HttpException('Não foi possível atualizar a candidatura.', HttpStatus.INTERNAL_SERVER_ERROR)
+            throw new HttpException('Não foi possível atualizar o barbeiro.', HttpStatus.INTERNAL_SERVER_ERROR)
             }
     }
 
