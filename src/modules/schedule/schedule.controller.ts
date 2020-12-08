@@ -9,6 +9,7 @@ import { ScheduleService } from './schedule.service';
 import { FeedbackDto } from './dtos/feedback.dto';
 import { GetUser } from '../shared/decorators/get-user.decorator'
 import { User } from '../user/models/user.model';
+import { WorkTime } from '../barber/models/barber.model';
 
 @Controller('schedule')
 @UseGuards(AuthGuard())
@@ -37,6 +38,12 @@ export class ScheduleController {
   @UseInterceptors(new UserRoleInterceptor([EUserRole.CLIENT, EUserRole.ADMIN]))
   async findSchedulesByClient(@Param('id') id: string): Promise<Schedule[]> {
     return await this.scheduleService.findSchedulesByClient(id);
+  }
+
+  @Get('/agenda-barber/:id')
+  @UseGuards(AuthGuard('jwt'))
+  async schedule(@Param('id') barberId: string): Promise<WorkTime[]> {
+      return await this.scheduleService.schedule(barberId);
   }
 
   @Post('/feedback')
