@@ -1,7 +1,6 @@
-import { Body, Controller, Get, Param, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { GetUser } from '../auth/decorators/get-user.decorator';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { UserRoleInterceptor } from '../auth/interceptors/user-role.interceptor';
 import { EUserRole } from '../user/enums/user-role.enum';
 import { User } from '../user/models/user.model';
@@ -9,6 +8,8 @@ import { BarberService } from './barber.service';
 import { CreateBarberDto } from './dto/create-barber.dto';
 import { Barber, BarberModel } from './models/barber.model';
 import { UploadFilesDto } from './dto/upload-files.dto';
+import { GetUser } from '../shared/decorators/get-user.decorator';
+import { IUser } from '../user/interfaces/user.interface';
 
 @Controller('barber')
 export class BarberController {
