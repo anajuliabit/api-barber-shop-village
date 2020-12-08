@@ -8,11 +8,13 @@ import { User } from '../user/models/user.model';
 import { BarberService } from './barber.service';
 import { CreateBarberDto } from './dto/create-barber.dto';
 import { Barber, BarberModel } from './models/barber.model';
+import { UploadFilesDto } from './dto/upload-files.dto';
 
 @Controller('barber')
 export class BarberController {
 
-    constructor(private readonly barberService: BarberService) {}
+    constructor(private readonly barberService: BarberService) {
+    }
 
     @Post('register')
     @UseInterceptors(FileInterceptor('image'))
@@ -31,5 +33,18 @@ export class BarberController {
     @UseInterceptors(new UserRoleInterceptor([EUserRole.BARBER, EUserRole.ADMIN]))
     async edit(@GetUser() user: User, @Body() createBarberDto: CreateBarberDto): Promise<Barber> {
         return await this.barberService.edit(user._id, createBarberDto);
+    }
+
+    @Post('/images/upload')
+    @UseInterceptors(FilesInterceptor('images'))
+    @UseGuards(AuthGuard('jwt'))
+    async uploadFile(@UploadedFiles() files : UploadFilesDto, @GetUser() user: IUser) {
+        return await this.barberService.savePortfolio(files, user);
+    }
+
+    @Get('/images/get')
+    @UseGuards(AuthGuard('jwt'))
+    async getImages(@GetUser() user: IUser) {
+        return { portfolio : await this.barberService.getImages(user)}
     }
 }
