@@ -1,8 +1,6 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { AuthInfo } from 'aws-sdk/clients/iot';
 import * as bcrypt from 'bcrypt'
-import { CreateUserDto } from '../user/dto/create-user.dto';
 import { EUserRole } from '../user/enums/user-role.enum';
 import { User } from '../user/models/user.model';
 
@@ -12,11 +10,15 @@ import { IAuth } from './interfaces/auth.interface';
 import { JwtPayload } from './interfaces/payload.interface';
 import { AwsService } from '../shared/aws/aws.service'
 import { RegisterUserDto } from './dtos/register-user-dto';
+import { BarberService } from '../barber/barber.service';
+import { BarberModel } from '../barber/models/barber.model';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
+    @Inject(forwardRef(() => BarberService))
+    private readonly barberService: BarberService,
     private readonly jwtService: JwtService,
     private readonly awsService: AwsService) { }
 
@@ -64,5 +66,12 @@ export class AuthService {
     const accessToken =  this.jwtService.sign(payload)
 
     return { accessToken, payload }
+  }
+
+  async getMe(user: User): Promise<BarberModel | User> {
+      if(user.roles.includes(EUserRole.BARBER)) {
+          return await this.barberService.findByUserId(user._id)
+      }
+      return user;
   }
 }

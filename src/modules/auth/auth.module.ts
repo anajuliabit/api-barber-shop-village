@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { UserModule } from '../user/user.module';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
@@ -9,6 +9,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from '../user/user.schema'
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AwsService } from '../shared/aws/aws.service'
+import { BarberModule } from '../barber/barber.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AwsService } from '../shared/aws/aws.service'
     }),
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     UserModule,
+    forwardRef(() => BarberModule),
   ],
   providers: [AuthService, JwtStrategy, AwsService],
   controllers: [AuthController],

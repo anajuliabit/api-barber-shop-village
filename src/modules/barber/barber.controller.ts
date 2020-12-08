@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { UserRoleInterceptor } from '../auth/interceptors/user-role.interceptor';
@@ -9,7 +9,6 @@ import { CreateBarberDto } from './dto/create-barber.dto';
 import { Barber, BarberModel } from './models/barber.model';
 import { UploadFilesDto } from './dto/upload-files.dto';
 import { GetUser } from '../shared/decorators/get-user.decorator';
-import { IUser } from '../user/interfaces/user.interface';
 
 @Controller('barber')
 export class BarberController {
@@ -29,6 +28,12 @@ export class BarberController {
         return await this.barberService.findAll();
     }
 
+    @Get('findById/:id')
+    @UseGuards(AuthGuard())
+    async findById(@Param() id: string): Promise<BarberModel> {
+        return await this.barberService.findById(id);
+    }
+
     @Put('edit')
     @UseGuards(AuthGuard())
     @UseInterceptors(new UserRoleInterceptor([EUserRole.BARBER, EUserRole.ADMIN]))
@@ -39,13 +44,13 @@ export class BarberController {
     @Post('/images/upload')
     @UseInterceptors(FilesInterceptor('images'))
     @UseGuards(AuthGuard('jwt'))
-    async uploadFile(@UploadedFiles() files : UploadFilesDto, @GetUser() user: IUser) {
-        return await this.barberService.savePortfolio(files, user);
+    async uploadFile(@UploadedFiles() files : UploadFilesDto, @GetUser() user: User): Promise<void> {
+        await this.barberService.savePortfolio(files, user);
     }
 
     @Get('/images/get')
     @UseGuards(AuthGuard('jwt'))
-    async getImages(@GetUser() user: IUser) {
+    async getImages(@GetUser() user: User) {
         return { portfolio : await this.barberService.getImages(user)}
     }
 }
