@@ -19,6 +19,7 @@ export class ScheduleService {
 
     async create(data: CreateScheduleDto): Promise<Schedule> {
         const barber = await this.barberService.findById(data.barberId);
+        console.log(barber)
         if(!barber) throw new HttpException('Barbeiro não encontrado', HttpStatus.NOT_FOUND) 
         const client = await this.userService.findByIdAndRole(data.clientId, EUserRole.CLIENT);
         if(!client) throw new HttpException('Cliente não encontrado', HttpStatus.NOT_FOUND) 

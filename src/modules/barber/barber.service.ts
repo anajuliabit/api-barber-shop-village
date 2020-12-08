@@ -73,7 +73,7 @@ export class BarberService {
     }
 
     async findById(id: string): Promise<BarberModel> {        
-        return await this.model.aggregate([
+        const barbers = await this.model.aggregate([
             { 
                 $match: { '_id': Types.ObjectId(id)  }
             },
@@ -96,7 +96,8 @@ export class BarberService {
                 },
             },
             { $unset: [ 'user'] },
-        ])[0] 
+        ])
+        return barbers[0]
     }
 
     async findByUserId(id: string): Promise<BarberModel> {    
