@@ -8,32 +8,29 @@ import { Schedule } from './models/schedule.model';
 import { ScheduleService } from './schedule.service';
 
 @Controller('schedule')
+@UseGuards(AuthGuard())
 export class ScheduleController {
 
   constructor(private readonly scheduleService: ScheduleService) { }
 
   @Post('create')
-  @UseGuards(AuthGuard())
   @UseInterceptors(new UserRoleInterceptor([EUserRole.CLIENT, EUserRole.ADMIN]))
   async createSchedule(@Body() createScheduleDto: CreateScheduleDto): Promise<Schedule> {
     return await this.scheduleService.create(createScheduleDto);
   }
 
   @Put('change-status')
-  @UseGuards(AuthGuard())
   async changeStatus(@Query('id') id: string, @Query('status') status: EScheduleStatus): Promise<Schedule> {
     return await this.scheduleService.changeStatus(id, status);
   }
 
   @Get('/barber/:id')
-  @UseGuards(AuthGuard())
   @UseInterceptors(new UserRoleInterceptor([EUserRole.BARBER, EUserRole.ADMIN]))
   async findSchedulesByBarber(@Param('id') id: string): Promise<Schedule[]> {
     return await this.scheduleService.findSchedulesByBarber(id);
   }
 
   @Get('/client/:id')
-  @UseGuards(AuthGuard())
   @UseInterceptors(new UserRoleInterceptor([EUserRole.CLIENT, EUserRole.ADMIN]))
   async findSchedulesByClient(@Param('id') id: string): Promise<Schedule[]> {
     return await this.scheduleService.findSchedulesByClient(id);

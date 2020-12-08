@@ -9,8 +9,8 @@ export class CreateBarberDto {
     passwordConfirmation: string
     cutPrice: number
     haircutType: EHaircutType[]
-    workTime: WorkTime[]
     description: string
     @IsNotEmptyObject()
     readonly image?: Record<string, unknown>
+    workTime?: WorkTime[]
   }

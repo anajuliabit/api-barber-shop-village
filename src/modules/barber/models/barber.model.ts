@@ -8,9 +8,14 @@ export class WorkTime {
 
 export class Barber extends Document {
     id?: string
+    name: string
+    email: string
     active?: boolean
     cutPrice: number
     userId: string
     haircutType?: EHaircutType[]
-    workTime: WorkTime[]
+    workTime?: WorkTime[]
 }
+
+export class BarberModel extends Barber {}
+

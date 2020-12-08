@@ -1,8 +1,13 @@
-import { Body, Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { GetUser } from '../auth/decorators/get-user.decorator';
+import { UserRoleInterceptor } from '../auth/interceptors/user-role.interceptor';
+import { EUserRole } from '../user/enums/user-role.enum';
+import { User } from '../user/models/user.model';
 import { BarberService } from './barber.service';
 import { CreateBarberDto } from './dto/create-barber.dto';
-import { Barber } from './models/barber.model';
+import { Barber, BarberModel } from './models/barber.model';
 
 @Controller('barber')
 export class BarberController {
@@ -11,12 +16,20 @@ export class BarberController {
 
     @Post('register')
     @UseInterceptors(FileInterceptor('image'))
-    async registerUser(@UploadedFile() file: Record<string, unknown>, @Body() createBarberDto: CreateBarberDto): Promise<Barber> {
+    async registerUser(@UploadedFile() file: Record<string, unknown>, @Body() createBarberDto: CreateBarberDto): Promise<BarberModel> {
         return await this.barberService.create(file, createBarberDto)
     }
 
     @Get('find')
-    async findAll(): Promise<Barber[]> {
+    @UseGuards(AuthGuard())
+    async findAll(): Promise<BarberModel[]> {
         return await this.barberService.findAll();
+    }
+
+    @Put('edit')
+    @UseGuards(AuthGuard())
+    @UseInterceptors(new UserRoleInterceptor([EUserRole.BARBER, EUserRole.ADMIN]))
+    async edit(@GetUser() user: User, @Body() createBarberDto: CreateBarberDto): Promise<Barber> {
+        return await this.barberService.edit(user._id, createBarberDto);
     }
 }
