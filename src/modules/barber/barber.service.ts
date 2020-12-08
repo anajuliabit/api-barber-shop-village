@@ -9,6 +9,7 @@ import { CreateBarberDto } from './dto/create-barber.dto';
 import { Barber, BarberModel } from './models/barber.model';
 import { AwsService } from '../shared/aws/aws.service';
 import { User } from '../user/models/user.model';
+import { DeleteImagesDto } from './dto/delete-images.dto';
 
 @Injectable()
 export class BarberService {
@@ -33,22 +34,22 @@ export class BarberService {
         if(!saveBarber) {
             await this.userService.delete(user.id);
             throw new HttpException("Não foi possível realizar o cadastro.", HttpStatus.BAD_REQUEST)
-        } 
+        }
         return saveBarber
     }
 
     async edit(userId: string, data: CreateBarberDto): Promise<Barber> {
-        const barber = await this.model.findOne({ userId }).exec(); 
+        const barber = await this.model.findOne({ userId }).exec();
         if(!barber) throw new HttpException('Barbeiro não encontrado', HttpStatus.NOT_FOUND)
         try {
             await barber.updateOne(data).exec()
-            return await this.model.findOne({ userId }).exec(); 
+            return await this.model.findOne({ userId }).exec();
             } catch (err) {
             throw new HttpException('Não foi possível atualizar a candidatura.', HttpStatus.INTERNAL_SERVER_ERROR)
-            } 
+            }
     }
 
-    async findAll(): Promise<BarberModel[]> {        
+    async findAll(): Promise<BarberModel[]> {
         return await this.model.aggregate([
             {
                 $lookup: {
@@ -69,7 +70,7 @@ export class BarberService {
                 },
             },
             { $unset: [ 'user'] },
-        ])   
+        ])
     }
 
     async findById(id: string): Promise<BarberModel> {        
@@ -100,9 +101,9 @@ export class BarberService {
         return barbers[0]
     }
 
-    async findByUserId(id: string): Promise<BarberModel> {    
+    async findByUserId(id: string): Promise<BarberModel> {
         const barber = await this.model.aggregate([
-            { 
+            {
                 $match: { 'userId': id }
             },
             {
@@ -149,7 +150,14 @@ export class BarberService {
         return obj.portfolio
     }
 
-    async softDeleteImages() {
-        
+    async softDeleteImages(paths: DeleteImagesDto, user: User) {
+        const { id } = user;
+        const obj : any = await this.model.findOne({ userId : id}, 'portfolio').exec()
+        obj.portfolio.forEach((obj) => {
+            if(paths.imagePaths.includes(obj.path))
+                obj.active = false;
+        });
+        await this.model.findOneAndUpdate({ userId : id}, { portfolio : obj.portfolio }).exec()
+        return obj.portfolio
     }
 }
