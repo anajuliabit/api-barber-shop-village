@@ -8,6 +8,7 @@ import { BarberService } from './barber.service';
 import { CreateBarberDto } from './dto/create-barber.dto';
 import { Barber, BarberModel } from './models/barber.model';
 import { UploadFilesDto } from './dto/upload-files.dto';
+import { DeleteImagesDto } from './dto/delete-images.dto';
 import { GetUser } from '../shared/decorators/get-user.decorator';
 
 @Controller('barber')
@@ -53,4 +54,11 @@ export class BarberController {
     async getImages(@GetUser() user: User) {
         return { portfolio : await this.barberService.getImages(user)}
     }
+
+    @Post('/images/delete')
+    @UseGuards(AuthGuard('jwt'))
+    async softDeleteImages(@Body() paths: DeleteImagesDto, @GetUser() user: User) {
+        return await this.barberService.softDeleteImages(paths, user)
+    }
+
 }
