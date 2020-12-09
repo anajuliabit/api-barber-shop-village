@@ -24,7 +24,6 @@ export class BarberController {
     }
 
     @Get('find')
-    @UseGuards(AuthGuard())
     async findAll(): Promise<BarberModel[]> {
         return await this.barberService.findAll();
     }
