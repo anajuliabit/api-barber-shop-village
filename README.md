@@ -15,7 +15,7 @@ This API was developed for the Software Engineering Applications class of the Co
 
 
 ## Documentation
-You can access the Documentation [here](docs/endpoints)
+You can access the Documentation [here](https://github.com/anajuliabit/api-barber-shop-village/wiki/Documentation)
 
 ## Techs
 
