@@ -36,7 +36,7 @@ export class AuthService {
     let profilePictureName  = "";
     
     if(file) {
-      profilePictureName = await this.awsService.upload(data.email, file, "profilePicture")
+      profilePictureName = await this.awsService.upload(data.email, file, "profilepicture")
     }
     const userPassword = bcrypt.hashSync(data.password, this.saltRounds)
     const createUser = await this.userService.create({ ...data, password: userPassword, profilePicture: profilePictureName })
