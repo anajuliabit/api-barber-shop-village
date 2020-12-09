@@ -28,9 +28,9 @@ export class BarberController {
         return await this.barberService.findAll();
     }
 
-    @Get('findById/:id')
+    @Get(':id')
     @UseGuards(AuthGuard())
-    async findById(@Param() id: string): Promise<BarberModel> {
+    async findById(@Param('id') id: string): Promise<BarberModel> {
         return await this.barberService.findById(id);
     }
 
