@@ -81,7 +81,7 @@ export class AuthService {
       if(user.roles.includes(EUserRole.BARBER)) {
           return await this.barberService.findByUserId(user._id)
       }
-      return user;
+      return await this.userService.findById(user._id);
   }
 
   private async verifyPassword(password: string, passwordConfirmation: string): Promise<string> {

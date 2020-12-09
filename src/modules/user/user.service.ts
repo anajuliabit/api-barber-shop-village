@@ -33,7 +33,7 @@ export class UserService {
 
   async findById(id: string): Promise<User> {
     return await this.model.findOne({ _id: Types.ObjectId(id), active: true },
-      'id email name roles').exec()
+      'id email name roles profilePicture').exec()
   }
 
   async findByIdAndRole(id: string, role: EUserRole): Promise<User> {
