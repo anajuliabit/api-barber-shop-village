@@ -43,6 +43,7 @@ export class BarberController {
 
     @Post('/images/upload')
     @UseInterceptors(FilesInterceptor('images'))
+    @UseInterceptors(new UserRoleInterceptor([EUserRole.BARBER]))
     @UseGuards(AuthGuard('jwt'))
     async uploadFile(@UploadedFiles() files : UploadFilesDto, @GetUser() user: User): Promise<void> {
         await this.barberService.savePortfolio(files, user);
