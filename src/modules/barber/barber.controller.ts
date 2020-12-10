@@ -10,6 +10,7 @@ import { Barber, BarberModel } from './models/barber.model';
 import { UploadFilesDto } from './dto/upload-files.dto';
 import { DeleteImagesDto } from './dto/delete-images.dto';
 import { GetUser } from '../shared/decorators/get-user.decorator';
+import { getImagesDto } from './dto/get-images.dto'
 
 @Controller('barber')
 export class BarberController {
@@ -48,10 +49,9 @@ export class BarberController {
         await this.barberService.savePortfolio(files, user);
     }
 
-    @Get('/images/get')
-    @UseGuards(AuthGuard('jwt'))
-    async getImages(@GetUser() user: User) {
-        return { portfolio : await this.barberService.getImages(user)}
+    @Post('/images/get')
+    async getImages(@Body() data : getImagesDto) {
+        return { portfolio : await this.barberService.getImages(data)}
     }
 
     @Post('/images/delete')

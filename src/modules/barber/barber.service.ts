@@ -10,6 +10,8 @@ import { Barber, BarberModel } from './models/barber.model';
 import { AwsService } from '../shared/aws/aws.service';
 import { User } from '../user/models/user.model';
 import { DeleteImagesDto } from './dto/delete-images.dto';
+import { getImagesDto } from './dto/get-images.dto'
+import { isUndefined } from '@nestjs/common/utils/shared.utils';
 
 @Injectable()
 export class BarberService {
@@ -147,9 +149,9 @@ export class BarberService {
         console.log(`Update barber's (${id}) portfolio.`)
     }
 
-    async getImages(user : User) {
-        const { id } = user;
-        const obj : any = await this.model.findOne({ userId : id}, 'portfolio').exec()
+    async getImages(data : getImagesDto) {
+        if(isUndefined(data.barberId) || data.barberId.length === 0) throw new HttpException("É necessário informar o ID do barbeiro.", HttpStatus.BAD_REQUEST)
+        const obj : any = await this.model.findOne({ _id : data.barberId }, 'portfolio').exec()
         return obj.portfolio
     }
 
