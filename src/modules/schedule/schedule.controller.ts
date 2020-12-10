@@ -6,9 +6,6 @@ import { CreateScheduleDto } from './dtos/create-schedule.dto';
 import { EScheduleStatus } from './enums/schedule-status.enum';
 import { Schedule } from './models/schedule.model';
 import { ScheduleService } from './schedule.service';
-import { FeedbackDto } from './dtos/feedback.dto';
-import { GetUser } from '../shared/decorators/get-user.decorator'
-import { User } from '../user/models/user.model';
 import { WorkTime } from '../barber/models/barber.model';
 
 @Controller('schedule')
@@ -44,11 +41,5 @@ export class ScheduleController {
   @UseGuards(AuthGuard('jwt'))
   async schedule(@Param('id') barberId: string): Promise<WorkTime[]> {
       return await this.scheduleService.schedule(barberId);
-  }
-
-  @Post('/feedback')
-  @UseGuards(AuthGuard('jwt'))
-  async saveFeedback(@Body() data: FeedbackDto, @GetUser() user: User) {
-      return await this.scheduleService.saveFeedback(data, user)
   }
 }

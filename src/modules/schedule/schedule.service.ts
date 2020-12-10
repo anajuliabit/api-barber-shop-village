@@ -7,8 +7,6 @@ import { UserService } from '../user/user.service';
 import { CreateScheduleDto } from './dtos/create-schedule.dto';
 import { EScheduleStatus } from './enums/schedule-status.enum';
 import { Schedule } from './models/schedule.model';
-import { FeedbackDto } from './dtos/feedback.dto';
-import { User } from '../user/models/user.model';
 import { WorkTime } from '../barber/models/barber.model';
 
 @Injectable()
@@ -66,12 +64,5 @@ export class ScheduleService {
 
     private async scheduleExists(barberId: string, date: Date): Promise<Schedule[]> {
         return await this.model.find({ barberId, date, status: { $in: [EScheduleStatus.PENDING, EScheduleStatus.SCHEDULED] }})
-    }
-
-    async saveFeedback(data: FeedbackDto, user: User) {
-        const schedule = await this.model.findOne({ _id: data.id, clientId: user.id})
-        if(!schedule) throw new HttpException('Agendamento inexistente', HttpStatus.NOT_FOUND)
-        if(schedule.status != "FINISHED") throw new HttpException('O agendamento ainda não foi finalizado', HttpStatus.BAD_REQUEST)
-        return await this.model.findOneAndUpdate({ _id: data.id, clientId: user.id}, { feedback : { value: data.value, description: data.description }})
     }
 }

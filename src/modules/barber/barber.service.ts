@@ -12,6 +12,7 @@ import { User } from '../user/models/user.model';
 import { DeleteImagesDto } from './dto/delete-images.dto';
 import { getImagesDto } from './dto/get-images.dto'
 import { isUndefined } from '@nestjs/common/utils/shared.utils';
+import { FeedbackDto } from './dto/feedback.dto';
 
 @Injectable()
 export class BarberService {
@@ -164,5 +165,17 @@ export class BarberService {
         });
         await this.model.findOneAndUpdate({ userId : id}, { portfolio : obj.portfolio }).exec()
         return obj.portfolio
+    }
+
+    async saveFeedback(data: FeedbackDto, user: User) {
+        const barber : Barber = await this.model.findOne({ _id: data.barberId })
+        if(!barber) throw new HttpException('Barbeiro inexistente', HttpStatus.NOT_FOUND)
+        return this.model.findOneAndUpdate({ _id: data.barberId }, {
+            feedback: [...barber.feedback, {
+                value: data.value,
+                description: data.description,
+                userId: user.id
+            }]
+        });
     }
 }

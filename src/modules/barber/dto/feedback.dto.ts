@@ -1,5 +1,5 @@
 export class FeedbackDto {
-    readonly id: string
+    readonly barberId: string
     readonly value: number
     readonly description?: string
 }

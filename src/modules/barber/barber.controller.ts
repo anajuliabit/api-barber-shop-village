@@ -11,6 +11,7 @@ import { UploadFilesDto } from './dto/upload-files.dto';
 import { DeleteImagesDto } from './dto/delete-images.dto';
 import { GetUser } from '../shared/decorators/get-user.decorator';
 import { getImagesDto } from './dto/get-images.dto'
+import { FeedbackDto } from './dto/feedback.dto';
 
 @Controller('barber')
 export class BarberController {
@@ -59,5 +60,9 @@ export class BarberController {
     async softDeleteImages(@Body() paths: DeleteImagesDto, @GetUser() user: User) {
         return await this.barberService.softDeleteImages(paths, user)
     }
-
+    @Post('/feedback')
+    @UseGuards(AuthGuard('jwt'))
+    async saveFeedback(@Body() data: FeedbackDto, @GetUser() user: User) {
+        return await this.barberService.saveFeedback(data, user)
+    }
 }

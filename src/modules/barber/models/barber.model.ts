@@ -15,6 +15,8 @@ export class Barber extends Document {
     userId: string
     haircutType?: EHaircutType[]
     workTime?: WorkTime[]
+    feedback?: any
+    portfolio?: Record<string, unknown>
 }
 
 export class BarberModel extends Barber {}

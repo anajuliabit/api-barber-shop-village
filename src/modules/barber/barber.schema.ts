@@ -15,5 +15,9 @@ export const BarberSchema = new mongoose.Schema({
   portfolio: {
       type: Array,
       required: false
+  },
+  feedback: {
+    type: Array,
+    required: false
   }
 }, { timestamps: true, collection: 'barbers' })
